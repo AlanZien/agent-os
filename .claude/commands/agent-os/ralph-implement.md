@@ -105,36 +105,36 @@ Check if standards exist in `agent-os/standards/`
 
 ---
 
-### STEP 3: Select Standards
+### STEP 3: Load All Standards
 
-**Ask user:**
+**Standards are automatically included for all implementations** (same as implementer agent):
 
 ```
-Which standards should guide this implementation?
+# Product-Level References
+@agent-os/product/design-system.md
 
-Quick options:
-1. All standards (agent-os/standards/**/*)
-2. Backend only (agent-os/standards/backend/**)
-3. Frontend only (agent-os/standards/frontend/**)
-4. Custom selection (you specify)
-5. None
+# Feature-Level Test Specifications
+@agent-os/specs/[spec-name]/test-plan.md
 
-Enter option number:
+# Quick Reference & Bootstrap
+@agent-os/standards/QUICK-REFERENCE.md
+@agent-os/standards/PROJECT-BOOTSTRAP.md
+
+# Core Standards
+@agent-os/standards/backend/BACKEND-FASTAPI.md
+@agent-os/standards/backend/DATABASE-SUPABASE.md
+@agent-os/standards/backend/backend-patterns.md
+@agent-os/standards/frontend/MOBILE-REACT-NATIVE.md
+@agent-os/standards/frontend/frontend-patterns.md
+@agent-os/standards/global-standards.md
+
+# Security, DevOps & Testing
+@agent-os/standards/global/security.md
+@agent-os/standards/global/ci-cd-devops.md
+@agent-os/standards/testing/test-writing.md
 ```
 
-**If user chose "4. Custom selection":**
-```
-Specify standards to include (one per line, or comma-separated):
-
-Examples:
-- backend/BACKEND-FASTAPI.md
-- frontend/*
-- global/security.md
-
-Enter standards:
-```
-
-**Compile standards list** based on user selection.
+**Note:** All standards are included to ensure comprehensive coverage, especially critical patterns like core service abstractions (cache, logging, monitoring, payment).
 
 ---
 
@@ -169,7 +169,7 @@ Load the template from `.claude/ralph-prompts/tdd-task-group.md`
 **Replace these placeholders:**
 - `[TASK_GROUP_NAME]` → actual task group name from tasks.md
 - `[SPEC_NAME]` → spec folder name
-- `[STANDARDS_LIST]` → compiled standards list from Step 3
+- `[STANDARDS_LIST]` → complete standards list from Step 3 (all standards)
 - `[TEST_COMMAND_FOR_TASK_GROUP]` → test command from Step 4
 
 **Resulting prompt structure:**
@@ -184,10 +184,21 @@ Implement task group "Database Layer" from agent-os/specs/user-auth/tasks.md...
 ...
 
 ## Standards to follow:
+# Product-Level References
+@agent-os/product/design-system.md
+
+# Core Standards
 @agent-os/standards/backend/BACKEND-FASTAPI.md
 @agent-os/standards/backend/DATABASE-SUPABASE.md
+@agent-os/standards/backend/backend-patterns.md
+@agent-os/standards/frontend/MOBILE-REACT-NATIVE.md
+@agent-os/standards/frontend/frontend-patterns.md
+@agent-os/standards/global-standards.md
+
+# Security, DevOps & Testing
+@agent-os/standards/global/security.md
+@agent-os/standards/global/ci-cd-devops.md
 @agent-os/standards/testing/test-writing.md
-...
 
 [Rest of template...]
 ```
@@ -209,11 +220,11 @@ Tests: 8 tests from test-plan.md
 Max Iterations: 15
 Test Command: pytest backend/tests/
 
-Standards included:
-✓ backend/BACKEND-FASTAPI.md
-✓ backend/DATABASE-SUPABASE.md
-✓ testing/test-writing.md
-✓ global/security.md
+Standards included: ALL (comprehensive coverage)
+✓ Backend patterns (FastAPI, Supabase, core abstractions)
+✓ Frontend patterns (React Native)
+✓ Global standards (security, testing, ci-cd)
+✓ Product design system
 
 Ralph will:
 1. Read test specifications from test-plan.md

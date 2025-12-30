@@ -10,12 +10,23 @@ coverage/
 build/
 dist/
 
-# Environment variables
+# Environment variables (NEVER commit actual credentials)
 .env
+.env.*
 .env.local
+.env.development
 .env.development.local
+.env.test
 .env.test.local
+.env.production
 .env.production.local
+.env.dev
+.env.staging
+.env.prod
+
+# Except example files (safe to commit)
+!.env.example
+!.env.*.example
 
 # Logs
 npm-debug.log*

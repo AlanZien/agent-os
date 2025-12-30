@@ -23,6 +23,62 @@ Implement all tasks assigned to you and ONLY those task(s) that have been assign
    ```
    This updates Task statuses in Notion and tracks progress automatically.
 
+## REQUIRED: Use Core Service Abstractions
+
+**CRITICAL:** When implementing backend code, you MUST use the core service abstractions from `backend/app/core/`.
+
+### Core Services Available
+
+```python
+from app.core import cache, get_logger, monitor, payment
+
+logger = get_logger(__name__)  # Always initialize logger at top of file
+```
+
+| Service | Purpose | When to Use |
+|---------|---------|-------------|
+| `cache` | Redis caching | DB queries, expensive computations, API calls |
+| `get_logger` | Structured logging | ALL code (info, debug, error logging) |
+| `monitor` | Error tracking (Sentry) | Exception handling, performance tracing |
+| `payment` | Payment processing (Stripe) | Payment intents, refunds, webhooks |
+
+### ❌ NEVER Do This
+
+```python
+# WRONG - Direct imports
+import redis
+import stripe
+import sentry_sdk
+```
+
+### ✅ ALWAYS Do This
+
+```python
+# CORRECT - Use abstractions
+from app.core import cache, get_logger, monitor, payment
+
+logger = get_logger(__name__)
+
+def my_function(user_id):
+    # Cache
+    cached = cache.get(f"user:{user_id}")
+    if cached:
+        return cached
+
+    # DB query
+    user = db.query(User).filter(User.id == user_id).first()
+
+    # Cache result
+    cache.set(f"user:{user_id}", user.dict(), ttl=3600)
+
+    # Log
+    logger.info("User fetched", extra={"user_id": user_id})
+
+    return user
+```
+
+**For complete patterns and examples:** `@agent-os/standards/backend/backend-patterns.md`
+
 ## Guide your implementation using:
 - **test-plan.md (if exists)**: Authoritative source for test specifications with Given-When-Then format
 - **The existing patterns** that you've found and analyzed in the codebase.

@@ -79,18 +79,18 @@ services:
 
 ## GitHub Actions Workflows
 
-### Backend CI/CD
+### Backend CI/CD (Multi-Environment)
 ```yaml
 # .github/workflows/backend-ci.yml
 name: Backend CI/CD
 
 on:
   push:
-    branches: [main, develop]
+    branches: [main, staging, develop]
     paths:
       - 'backend/**'
   pull_request:
-    branches: [main]
+    branches: [main, staging]
     paths:
       - 'backend/**'
 
@@ -152,19 +152,71 @@ jobs:
           cd backend
           mypy app/
 
-  deploy:
+  # Deploy to Development
+  deploy-dev:
     needs: [test, lint]
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/develop'
+    environment: development
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Deploy to Railway
+      - name: Deploy to Development
         uses: bervProject/railway-deploy@main
         with:
           railway_token: ${{ secrets.RAILWAY_TOKEN }}
-          service: backend
+          service: backend-dev
+        env:
+          DATABASE_URL: ${{ secrets.DEV_DATABASE_URL }}
+          SUPABASE_URL: ${{ secrets.DEV_SUPABASE_URL }}
+          JWT_SECRET: ${{ secrets.DEV_JWT_SECRET }}
+
+  # Deploy to Staging
+  deploy-staging:
+    needs: [test, lint]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/staging'
+    environment: staging
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy to Staging
+        uses: bervProject/railway-deploy@main
+        with:
+          railway_token: ${{ secrets.RAILWAY_TOKEN }}
+          service: backend-staging
+        env:
+          DATABASE_URL: ${{ secrets.STAGING_DATABASE_URL }}
+          SUPABASE_URL: ${{ secrets.STAGING_SUPABASE_URL }}
+          JWT_SECRET: ${{ secrets.STAGING_JWT_SECRET }}
+
+  # Deploy to Production (requires manual approval)
+  deploy-prod:
+    needs: [test, lint]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    environment:
+      name: production
+      url: https://api.yourproject.com
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy to Production
+        uses: bervProject/railway-deploy@main
+        with:
+          railway_token: ${{ secrets.RAILWAY_TOKEN }}
+          service: backend-prod
+        env:
+          DATABASE_URL: ${{ secrets.PROD_DATABASE_URL }}
+          SUPABASE_URL: ${{ secrets.PROD_SUPABASE_URL }}
+          JWT_SECRET: ${{ secrets.PROD_JWT_SECRET }}
+
+      - name: Run smoke tests
+        run: |
+          curl --fail https://api.yourproject.com/health || exit 1
 ```
 
 ### Mobile CI/CD
@@ -301,33 +353,73 @@ jobs:
 
 ## Environment Management
 
-### GitHub Secrets
-Required secrets in GitHub repository settings:
+**For complete environment configuration, see:** `@agent-os/standards/global/environments.md`
 
-**Backend**:
-- `RAILWAY_TOKEN` - Railway deployment token
-- `SUPABASE_URL` - Production Supabase URL
-- `SUPABASE_KEY` - Production Supabase key
-- `JWT_SECRET` - Production JWT secret
+### Environment Strategy
 
-**Mobile**:
+This project uses a **3-environment strategy**:
+
+| Environment | Git Branch | Purpose | Deployment |
+|-------------|-----------|---------|------------|
+| **Development** | `develop` | Active development | Auto on push |
+| **Staging** | `staging` | Pre-production testing | Auto on PR merge |
+| **Production** | `main` | Live production | Manual approval |
+
+**See full branching strategy:** `@agent-os/standards/global/git-workflow.md`
+
+---
+
+### GitHub Secrets by Environment
+
+#### Development Secrets
+Required for `develop` branch CI/CD:
+- `DEV_DATABASE_URL` - Development database URL
+- `DEV_SUPABASE_URL` - Dev Supabase project URL
+- `DEV_SUPABASE_ANON_KEY` - Dev Supabase anon key
+- `DEV_SUPABASE_SERVICE_KEY` - Dev Supabase service key
+- `DEV_JWT_SECRET` - Development JWT secret (32+ chars)
+
+#### Staging Secrets
+Required for `staging` branch CI/CD:
+- `STAGING_DATABASE_URL` - Staging database URL
+- `STAGING_SUPABASE_URL` - Staging Supabase project URL
+- `STAGING_SUPABASE_ANON_KEY` - Staging Supabase anon key
+- `STAGING_SUPABASE_SERVICE_KEY` - Staging Supabase service key
+- `STAGING_JWT_SECRET` - Staging JWT secret (32+ chars)
+
+#### Production Secrets
+Required for `main` branch CI/CD:
+- `PROD_DATABASE_URL` - Production database URL
+- `PROD_SUPABASE_URL` - Production Supabase project URL
+- `PROD_SUPABASE_ANON_KEY` - Production Supabase anon key
+- `PROD_SUPABASE_SERVICE_KEY` - Production Supabase service key
+- `PROD_JWT_SECRET` - Production JWT secret (64+ chars, rotated monthly)
+- `RAILWAY_TOKEN` - Railway deployment token (production)
+
+#### Shared Secrets
+Used across all environments:
 - `EXPO_TOKEN` - Expo EAS token
 - `APPLE_TEAM_ID` - Apple Developer Team ID
 - `GOOGLE_SERVICES_JSON` - Base64 encoded google-services.json
+- `SENTRY_AUTH_TOKEN` - Sentry authentication token
+
+---
 
 ### Environment Files
-```bash
-# backend/.env.example
-SUPABASE_URL=https://xxxxx.supabase.co
-SUPABASE_KEY=your_key_here
-JWT_SECRET=your_secret_here
-ENVIRONMENT=production
 
-# mobile/.env.example
-EXPO_PUBLIC_API_URL=https://api.forkit.app
-EXPO_PUBLIC_SUPABASE_URL=https://xxxxx.supabase.co
-EXPO_PUBLIC_SUPABASE_ANON_KEY=your_anon_key_here
+**Project root contains:**
+- `.env.dev.example` - Development environment template
+- `.env.staging.example` - Staging environment template
+- `.env.prod.example` - Production environment template
+
+**Actual environment files (NEVER commit):**
+```bash
+.env.dev       # Local development config
+.env.staging   # Staging config (CI/CD only)
+.env.prod      # Production config (CI/CD only, or secrets manager)
 ```
+
+**See `.env.*.example` files for complete configuration options.**
 
 ## Deployment Strategies
 
