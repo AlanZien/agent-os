@@ -2,68 +2,68 @@
 
 ## Overview
 
-At the end of each task group implementation, user tests should be added to a dedicated Notion database to track manual testing requirements.
+À la fin de chaque implémentation de feature, des tests utilisateur peuvent être ajoutés à une database Notion dédiée pour tracker les tests manuels requis.
 
 ## Database Structure
 
-Create a Notion database named "Tests Utilisateur - [Project Name]" with the following properties:
+Créer une database Notion "Tests Utilisateur - AgentOS-Tracker" avec les propriétés suivantes :
 
 | Property | Type | Options |
 |----------|------|---------|
 | Name | Title | - |
-| Groupe | Select | Auth, Recettes, Planning, etc. (per feature group) |
+| Groupe | Select | Auth, Dashboard, Settings, etc. |
 | Statut | Select | À tester, Validé, Bug |
 | Priorité | Select | Critique, Important, Normal |
-| Étapes | Text | Step-by-step test instructions |
-| Résultat attendu | Text | Expected outcome |
-| Date | Date | Test completion date |
+| Étapes | Text | Instructions étape par étape |
+| Résultat attendu | Text | Ce qui devrait se passer |
+| Date | Date | Date de complétion du test |
 
 ## Workflow Integration
 
-### After completing a Task Group:
+### Après avoir complété un Task Group :
 
-1. Identify all user-facing features implemented
-2. Create test entries in the database via MCP:
+1. Identifier toutes les features user-facing implémentées
+2. Créer les entrées de test dans la database via MCP :
 
 ```json
 {
   "parent": {"type": "data_source_id", "data_source_id": "[your-database-id]"},
   "pages": [{
     "properties": {
-      "Name": "Feature description to test",
-      "Groupe": "Feature Group",
+      "Name": "Description de la feature à tester",
+      "Groupe": "Auth",
       "Statut": "À tester",
       "Priorité": "Critique",
-      "Étapes": "1. Step one\\n2. Step two\\n3. Step three",
-      "Résultat attendu": "What should happen"
+      "Étapes": "1. Aller sur /login\n2. Entrer email\n3. Entrer password\n4. Cliquer Login",
+      "Résultat attendu": "Redirection vers /dashboard"
     }
   }]
 }
 ```
 
-### Status Flow:
+### Flow des Statuts :
 
 ```
-À tester → Validé (if test passes)
-         → Bug (if test fails - create bug in 🐛 Bugs database)
+À tester → Validé (si test passe)
+         → Bug (si test échoue - créer bug dans 🐛 Bugs database)
 ```
 
-## Example Test Entries
+## Exemple: Tests Authentication
 
-### Authentication Feature Group:
-
-| Test | Priority |
+| Test | Priorité |
 |------|----------|
-| Registration with valid email | Critique |
-| Email validation | Critique |
-| Login after validation | Critique |
-| Biometric toggle | Normal |
-| Logout | Important |
+| Inscription avec email valide | Critique |
+| Validation email (format) | Critique |
+| Login après inscription | Critique |
 | Forgot password flow | Important |
+| Magic link login | Important |
+| Logout | Important |
+| Protection route /dashboard | Critique |
+| Redirect authenticated user from /login | Normal |
 
-## Benefits
+## Bénéfices
 
-- Clear visibility on what needs manual testing
-- Tracks testing progress per feature group
-- Links bugs discovered to specific tests
-- Ensures no feature ships without manual QA
+- Visibilité claire sur ce qui doit être testé manuellement
+- Tracking du progrès des tests par feature group
+- Lien entre bugs découverts et tests spécifiques
+- Assurance qu'aucune feature n'est livrée sans QA manuel

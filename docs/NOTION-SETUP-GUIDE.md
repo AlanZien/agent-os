@@ -1,14 +1,12 @@
-# 📊 Notion PM System - Setup Guide Manuel
+# 📊 Notion PM System - Setup Guide
 
-Guide rapide pour configurer les databases Notion pour ForkIt (réutilisable pour Maison Epigenetic).
+Guide pour configurer les databases Notion pour AgentOS-Tracker.
 
 ## 🎯 Database 1 : Projects
 
 **Ouvre la database "🎯 Projects"** dans Notion
 
 ### Propriétés à Créer
-
-Clique sur **"+ Add a property"** pour chaque :
 
 1. **Status** (Select)
    - Not Started (gray)
@@ -19,8 +17,8 @@ Clique sur **"+ Add a property"** pour chaque :
 
 2. **Phase** (Select)
    - Phase 0 - Setup (gray)
-   - Phase 1 - ForkIt (blue)
-   - Phase 2 - Maison Epigenetic (purple)
+   - Phase 1 - Core Features (blue)
+   - Phase 2 - Advanced Features (purple)
 
 3. **% Done** (Number → Format: Percent)
 
@@ -31,16 +29,6 @@ Clique sur **"+ Add a property"** pour chaque :
 6. **Owner** (Person)
 
 7. **Description** (Text)
-
-### Première Entrée à Créer
-
-**Clique "New"** et remplis :
-- **Name**: Setup System
-- **Status**: In Progress
-- **Phase**: Phase 0 - Setup
-- **% Done**: 50
-- **Start Date**: 2024-12-27
-- **Description**: Installation et configuration du système de développement complet (Agent OS + Claude-Mem + Notion PM + Standards)
 
 ---
 
@@ -71,11 +59,7 @@ Clique sur **"+ Add a property"** pour chaque :
 
 6. **Story Points** (Number)
 
-7. **Time Estimate (h)** (Number)
-
-8. **Time Spent (h)** (Number)
-
-9. **Tags** (Multi-select)
+7. **Tags** (Multi-select)
    - Backend (blue)
    - Frontend (green)
    - Database (purple)
@@ -83,86 +67,40 @@ Clique sur **"+ Add a property"** pour chaque :
    - Testing (pink)
    - Documentation (gray)
 
-10. **Blocked By** (Relation → Tasks database - self-relation)
-
-11. **Dependencies** (Text)
-
-12. **Notes** (Text)
-
-### 8 Tâches Initiales à Créer
-
-Clique **"New"** 8 fois et remplis :
-
-1. **Clone Agent OS**
-   - Status: Done
-   - Priority: High
-   - Project: Setup System
-   - Tags: DevOps
-
-2. **Create ForkIt structure**
-   - Status: Done
-   - Priority: High
-   - Project: Setup System
-   - Tags: DevOps
-
-3. **Setup Notion databases**
-   - Status: Done
-   - Priority: High
-   - Project: Setup System
-   - Tags: DevOps
-
-4. **Configure Agent OS workflows**
-   - Status: Todo
-   - Priority: High
-   - Project: Setup System
-   - Tags: DevOps
-
-5. **Create condensed standards**
-   - Status: Todo
-   - Priority: Medium
-   - Project: Setup System
-   - Tags: DevOps
-
-6. **Setup Supabase project**
-   - Status: Todo
-   - Priority: Medium
-   - Project: Setup System
-   - Tags: DevOps
-
-7. **Configure Claude-Mem**
-   - Status: Todo
-   - Priority: Low
-   - Project: Setup System
-   - Tags: DevOps
-
-8. **Test complete workflow**
-   - Status: Todo
-   - Priority: High
-   - Project: Setup System
-   - Tags: DevOps
+8. **Notes** (Text)
 
 ---
 
-## 📋 Database 3 : Sprints
+## 📋 Database 3 : Specs
 
-**Ouvre "📋 Sprints"**
+**Ouvre "📋 Specs"**
 
 ### Propriétés
 
-1. **Status** (Select): Planned, Active, Completed
-2. **Start Date** (Date)
-3. **End Date** (Date)
-4. **Goal** (Text)
-5. **Tasks** (Relation → Tasks)
-6. **Velocity (SP)** (Number)
-7. **Completed (SP)** (Number)
-8. **Retrospective** (Text)
-
-*(Pas de données initiales)*
+1. **Status** (Select): Draft, In Progress, Completed
+2. **Project** (Relation → Projects)
+3. **Created Date** (Date)
+4. **Completion Date** (Date)
+5. **Description** (Text)
 
 ---
 
-## 🐛 Database 4 : Bugs
+## 🧪 Database 4 : Tests
+
+**Ouvre "🧪 Tests"**
+
+### Propriétés
+
+1. **Status** (Select): Passing, Failing, Pending
+2. **Type** (Select): Unit, Integration, E2E
+3. **Spec** (Relation → Specs)
+4. **File Path** (Text)
+5. **Test Count** (Number)
+6. **Notes** (Text)
+
+---
+
+## 🐛 Database 5 : Bugs
 
 **Ouvre "🐛 Bugs"**
 
@@ -178,66 +116,9 @@ Clique **"New"** 8 fois et remplis :
 8. **Root Cause** (Text)
 9. **Fix Description** (Text)
 
-*(Pas de données initiales)*
-
 ---
 
-## 📝 Database 5 : Decisions (ADR)
-
-**Ouvre "📝 Decisions (ADR)"**
-
-### Propriétés
-
-1. **Status** (Select): Proposed, Accepted, Rejected, Superseded
-2. **Project** (Relation → Projects)
-3. **Category** (Select): Architecture, Technology Stack, Design Pattern, Process, Security
-4. **Decision Date** (Date)
-5. **Decision Maker** (Person)
-6. **Context** (Text)
-7. **Decision** (Text)
-8. **Consequences** (Text)
-9. **Alternatives** (Text)
-
-*(Pas de données initiales)*
-
----
-
-## 📚 Database 6 : Standards
-
-**Ouvre "📚 Standards"**
-
-### Propriétés
-
-1. **Category** (Select): Backend, Frontend, Database, Testing, Security, DevOps
-2. **Status** (Select): Draft, Review, Active, Deprecated
-3. **Token Size** (Number)
-4. **Last Updated** (Date)
-5. **File Path** (Text)
-6. **Summary** (Text)
-
-*(Pas de données initiales)*
-
----
-
-## 🔄 Database 7 : Daily Standup
-
-**Ouvre "🔄 Daily Standup"**
-
-### Propriétés
-
-1. **Project** (Relation → Projects)
-2. **What I Did** (Text)
-3. **What I Will Do** (Text)
-4. **Blockers** (Text)
-5. **Progress %** (Number → Percent)
-6. **Time Spent (h)** (Number)
-7. **Notes** (Text)
-
-*(Pas de données initiales)*
-
----
-
-## 🎨 Vues Recommandées à Créer
+## 🎨 Vues Recommandées
 
 ### Pour Tasks Database
 
@@ -245,37 +126,21 @@ Clique **"New"** 8 fois et remplis :
 - Group by: Status
 - Sort by: Priority (descending)
 
-**Vue Timeline** :
-- Layout: Timeline
-- Date property: Due Date
+### Pour Tests Database
 
-### Pour Sprints Database
-
-**Vue Timeline** :
-- Layout: Timeline
-- Start date: Start Date
-- End date: End Date
-
-### Pour Daily Standup
-
-**Vue Calendar** :
-- Layout: Calendar
-- Date property: Date
+**Vue Table** :
+- Group by: Type
+- Filter: Status = Failing (pour voir les problèmes)
 
 ---
 
 ## ✅ Checklist Final
 
-- [ ] Database Projects : 7 propriétés + 1 projet créé
-- [ ] Database Tasks : 12 propriétés + 8 tâches créées
-- [ ] Database Sprints : 8 propriétés
-- [ ] Database Bugs : 9 propriétés
-- [ ] Database Decisions : 9 propriétés
-- [ ] Database Standards : 6 propriétés
-- [ ] Database Daily Standup : 7 propriétés
-- [ ] Vue Kanban créée pour Tasks
-- [ ] Relations testées (Project → Tasks fonctionne)
+- [ ] Database Projects créée avec propriétés
+- [ ] Database Tasks créée avec propriétés
+- [ ] Database Specs créée avec propriétés
+- [ ] Database Tests créée avec propriétés
+- [ ] Database Bugs créée avec propriétés
+- [ ] Relations testées
 
 **Temps estimé : 10-15 minutes**
-
-Une fois terminé, ton système PM Notion sera complètement opérationnel et réutilisable pour Maison Epigenetic ! 🚀
