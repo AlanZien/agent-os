@@ -266,12 +266,14 @@ This updates the Project in Notion:
 
 After documenting requirements, analyze the feature complexity to recommend the appropriate workflow track.
 
-**Complexity Scoring:**
+**Complexity Scoring (Multidimensional):**
 
-Count the following elements from your requirements analysis:
+The complexity score is calculated using base points, risk multipliers, and integration multipliers.
 
-| Element | Points | How to Count |
-|---------|--------|--------------|
+#### Step 8.1: Count Base Elements
+
+| Element | Base Points | How to Count |
+|---------|:-----------:|--------------|
 | UI Components | 1 pt each | Screens, modals, forms, lists identified |
 | API Endpoints | 2 pts each | Backend routes needed (GET, POST, PUT, DELETE) |
 | Database Changes | 3 pts each | New tables, columns, migrations |
@@ -280,10 +282,42 @@ Count the following elements from your requirements analysis:
 | State Management | 2 pts each | New stores, complex state logic |
 | Authentication/Security | 3 pts | If auth logic is involved |
 
-**Calculate Total Score:**
+#### Step 8.2: Determine Risk Multiplier
+
+Assess the type of data this feature handles:
+
+| Data Type | Multiplier | Examples |
+|-----------|:----------:|----------|
+| Standard data | ×1 | Settings, preferences, UI state |
+| Personal data (PII) | ×1.5 | Names, emails, addresses |
+| Sensitive data | ×2 | Health records, financial data |
+| Critical data | ×2.5 | Authentication, payments, medical decisions |
+
+#### Step 8.3: Determine Integration Multiplier
+
+Assess the complexity of external integrations:
+
+| Integration Type | Multiplier | Examples |
+|------------------|:----------:|----------|
+| Internal only | ×1 | No external APIs |
+| Simple external API | ×1.25 | REST API, no auth required |
+| External API with auth | ×1.5 | OAuth, API keys, tokens |
+| Complex external | ×2 | Webhooks, real-time, multi-step flows |
+
+#### Step 8.4: Count Dependencies
+
+How many other features depend on this one?
+
+| Dependencies | Bonus |
+|--------------|:-----:|
+| Standalone feature | +0 pts |
+| 1-2 dependent features | +2 pts |
+| 3+ dependent features | +5 pts |
+
+#### Step 8.5: Calculate Final Score
 
 ```
-complexity_score = (
+base_score = (
     ui_components × 1 +
     api_endpoints × 2 +
     db_changes × 3 +
@@ -292,15 +326,26 @@ complexity_score = (
     state_stores × 2 +
     auth_involved × 3
 )
+
+final_score = (base_score × risk_multiplier × integration_multiplier) + dependency_bonus
 ```
+
+**Example:**
+- Feature: Sync health data from wearable API
+- Base: API(2) + DB(3) + External(5) = 10 pts
+- Risk: Health data = ×2
+- Integration: OAuth + webhooks = ×2
+- Dependencies: 2 features depend on this = +2 pts
+- **Final: (10 × 2 × 2) + 2 = 42 pts → 🏗️ COMPLEX**
 
 **Track Determination:**
 
 | Score | Track | Workflow |
-|-------|-------|----------|
-| ≤ 8 | 🚀 FAST | /write-spec → /create-tasks → /implement-tasks |
-| 9-20 | ⚙️ STANDARD | /write-spec → /plan-tests → /create-tasks → /implement-tasks → /verify |
-| > 20 | 🏗️ COMPLEX | /verify-spec → /write-spec → /plan-tests → /create-tasks → /orchestrate-tasks → /verify |
+|:-----:|:-----:|----------|
+| ≤ 10 | 🚀 FAST | /write-spec → /create-tasks → /implement-tasks |
+| 11-25 | ⚙️ STANDARD | /write-spec → /plan-tests → /create-tasks → /implement-tasks → /verify |
+| 26-50 | 🏗️ COMPLEX | /verify-spec → /write-spec → /plan-tests → /create-tasks → /orchestrate-tasks → /verify |
+| > 50 | ⚠️ EPIC | Feature too large - must be split into smaller features first |
 
 **Add to requirements.md:**
 
@@ -311,9 +356,9 @@ Append the following section at the end of requirements.md:
 
 ## Complexity Analysis
 
-### Elements Identified
+### Base Elements
 | Element | Count | Points |
-|---------|-------|--------|
+|---------|:-----:|:------:|
 | UI Components | [X] | [X × 1] |
 | API Endpoints | [X] | [X × 2] |
 | Database Changes | [X] | [X × 3] |
@@ -321,14 +366,29 @@ Append the following section at the end of requirements.md:
 | User Scenarios | [X] | [X × 0.5] |
 | State Management | [X] | [X × 2] |
 | Auth/Security | [0/1] | [X × 3] |
+| **Base Score** | | **[SUM]** |
+
+### Multipliers & Adjustments
+| Factor | Value | Rationale |
+|--------|:-----:|-----------|
+| Risk Multiplier | ×[1/1.5/2/2.5] | [Data type justification] |
+| Integration Multiplier | ×[1/1.25/1.5/2] | [Integration complexity justification] |
+| Dependency Bonus | +[0/2/5] | [Number of dependent features] |
+
+### Final Calculation
+```
+Final Score = ([BASE] × [RISK] × [INTEGRATION]) + [DEPS] = [SCORE]
+```
 
 **Total Complexity Score: [SCORE]**
 
 ### Recommended Track
-[🚀 FAST / ⚙️ STANDARD / 🏗️ COMPLEX]
+[🚀 FAST / ⚙️ STANDARD / 🏗️ COMPLEX / ⚠️ EPIC]
 
 **Recommended Workflow:**
 [List the workflow steps for this track]
+
+**Note:** If track is ⚠️ EPIC, list suggestions for splitting the feature.
 ```
 
 ### Step 9: Output Completion with Track Recommendation

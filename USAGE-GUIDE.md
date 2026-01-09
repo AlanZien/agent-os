@@ -2,17 +2,18 @@
 
 ## Workflow Tracks
 
-Agent-OS utilise trois tracks adaptes a la complexite de la feature. Le track est **detecte automatiquement** lors du `/shape-spec` mais peut etre override.
+Agent-OS utilise quatre tracks adaptes a la complexite de la feature. Le track est **detecte automatiquement** lors du `/shape-spec` via un scoring multidimensionnel (base × risque × integration + dependances).
 
 ---
 
-## Les 3 Tracks
+## Les 4 Tracks
 
 | Track | Score | Duree | Quand l'utiliser |
-|-------|-------|-------|------------------|
-| 🚀 **FAST** | ≤ 8 pts | 1-3 jours | Bug fixes, petites features, ajustements |
-| ⚙️ **STANDARD** | 9-20 pts | 3-7 jours | Features completes, nouveaux ecrans |
-| 🏗️ **COMPLEX** | > 20 pts | 1-3 semaines | Multi-composants, integrations complexes |
+|-------|:-----:|-------|------------------|
+| 🚀 **FAST** | ≤ 10 pts | 1-3 jours | Bug fixes, petites features, ajustements |
+| ⚙️ **STANDARD** | 11-25 pts | 3-7 jours | Features completes, nouveaux ecrans |
+| 🏗️ **COMPLEX** | 26-50 pts | 1-3 semaines | Multi-composants, integrations complexes |
+| ⚠️ **EPIC** | > 50 pts | - | Trop large, doit etre decoupe en features plus petites |
 
 ---
 
@@ -77,12 +78,14 @@ Agent-OS utilise trois tracks adaptes a la complexite de la feature. Le track es
 
 ---
 
-## Detection Automatique
+## Detection Automatique (Scoring Multidimensionnel)
 
-Lors du `/shape-spec`, l'agent analyse les requirements et calcule un score de complexite :
+Lors du `/shape-spec`, l'agent analyse les requirements et calcule un score de complexite en 3 etapes :
+
+### 1. Points de Base
 
 | Element | Points |
-|---------|--------|
+|---------|:------:|
 | UI Components (ecrans, modals, forms) | 1 pt chacun |
 | API Endpoints | 2 pts chacun |
 | Database Changes (tables, migrations) | 3 pts chacun |
@@ -91,16 +94,59 @@ Lors du `/shape-spec`, l'agent analyse les requirements et calcule un score de c
 | State Management (stores) | 2 pts chacun |
 | Auth/Security implique | 3 pts |
 
+### 2. Multiplicateurs
+
+**Multiplicateur de Risque (selon le type de donnees) :**
+
+| Type de donnees | Multiplicateur |
+|-----------------|:--------------:|
+| Standard (settings, preferences) | ×1 |
+| Personnelles/PII (noms, emails) | ×1.5 |
+| Sensibles (sante, finances) | ×2 |
+| Critiques (auth, paiements) | ×2.5 |
+
+**Multiplicateur d'Integration (selon la complexite externe) :**
+
+| Type d'integration | Multiplicateur |
+|--------------------|:--------------:|
+| Interne uniquement | ×1 |
+| API externe simple (REST, pas d'auth) | ×1.25 |
+| API externe avec auth (OAuth, API keys) | ×1.5 |
+| Integration complexe (webhooks, temps reel) | ×2 |
+
+### 3. Bonus de Dependances
+
+| Dependances | Bonus |
+|-------------|:-----:|
+| Feature standalone | +0 pts |
+| 1-2 features dependantes | +2 pts |
+| 3+ features dependantes | +5 pts |
+
+### Formule
+
+```
+Score Final = (Base × Risque × Integration) + Dependances
+```
+
 ### Exemple de calcul
 
-**Feature : Shopping List Generation**
-- UI Components : 3 (liste, categories, items) = 3 pts
-- API Endpoints : 2 (GET list, PATCH item) = 4 pts
-- DB Changes : 1 (table shopping_items) = 3 pts
-- User Scenarios : 5 = 2.5 pts
-- State Management : 1 (store) = 2 pts
+**Feature : Sync donnees sante depuis wearable**
+- Base : API(2) + DB(3) + External(5) = **10 pts**
+- Risque : Donnees de sante = **×2**
+- Integration : OAuth + webhooks = **×2**
+- Dependances : 2 features dependantes = **+2 pts**
 
-**Total : 14.5 pts → ⚙️ STANDARD**
+**Score Final : (10 × 2 × 2) + 2 = 42 pts → 🏗️ COMPLEX**
+
+---
+
+**Feature : Shopping List Generation (exemple classique)**
+- Base : UI(3) + API(4) + DB(3) + Scenarios(2.5) + State(2) = **14.5 pts**
+- Risque : Standard = **×1**
+- Integration : Interne = **×1**
+- Dependances : Aucune = **+0 pts**
+
+**Score Final : (14.5 × 1 × 1) + 0 = 14.5 pts → ⚙️ STANDARD**
 
 ---
 

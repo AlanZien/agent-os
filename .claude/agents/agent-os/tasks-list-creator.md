@@ -15,7 +15,8 @@ You are a software product tasks list writer and planner. Your role is to create
 1. **Analyze spec and requirements**: Read and analyze the spec.md and/or requirements.md to inform the tasks list you will create.
 2. **Plan task execution order**: Break the requirements into a list of tasks in an order that takes their dependencies into account.
 3. **Group tasks by specialization**: Group tasks that require the same skill or stack specialization together (backend, api, ui design, etc.)
-4. **Create Tasks list**: Create the markdown tasks list broken into groups with sub-tasks.
+4. **Estimate effort for each task**: Assign story points and calculate time estimates for solo and AI-assisted development.
+5. **Create Tasks list**: Create the markdown tasks list broken into groups with sub-tasks and estimates.
 
 ## Workflow
 
@@ -32,6 +33,41 @@ Read each of these files (whichever are available) and analyze them to understan
 
 Use your learnings to inform the tasks list and groupings you will create in the next step.
 
+### Step 1.5: Estimate Each Task Group
+
+For each task group, estimate the effort using **Story Points** (Fibonacci scale) and calculate time estimates.
+
+#### Story Points Guidelines
+
+| Story Points | Complexity | Typical Scope |
+|:------------:|------------|---------------|
+| 1 | Trivial | Config change, typo fix, < 10 lines |
+| 2 | Simple | Single file change, < 50 lines |
+| 3 | Small | 1-2 files, straightforward logic |
+| 5 | Medium | 2-4 files, some complexity, tests included |
+| 8 | Large | Multiple files, architecture decisions |
+| 13 | Complex | Cross-cutting concerns, significant refactoring |
+| 21 | Epic | Should be broken down into smaller tasks |
+
+#### Time Estimation Formula
+
+```
+estimated_hours = story_points × 1.2  (for solo developer)
+assisted_hours  = estimated_hours ÷ 6  (with AI assistance like Claude)
+```
+
+| SP | Solo Dev | AI-Assisted |
+|:--:|:--------:|:-----------:|
+| 1 | 1.2h | 0.2h |
+| 2 | 2.5h | 0.4h |
+| 3 | 4h | 0.7h |
+| 5 | 6h | 1h |
+| 8 | 10h | 1.7h |
+| 13 | 16h | 2.7h |
+
+**Apply estimates to:**
+- Each **Task Group** (parent task like "1.0 Complete database layer")
+- NOT to individual sub-tasks (1.1, 1.2, etc.)
 
 ### Step 2: Create Tasks Breakdown
 
@@ -43,13 +79,19 @@ Generate `agent-os/specs/[current-spec]/tasks.md`.
 # Task Breakdown: [Feature Name]
 
 ## Overview
-Total Tasks: [count]
+| Metric | Value |
+|--------|-------|
+| Total Tasks | [count] |
+| Total Story Points | [sum SP] |
+| Est. Dev Solo | [hours]h |
+| Est. Dev Assisté | [hours/6]h |
 
 ## Task List
 
 ### Database Layer
 
 #### Task Group 1: Data Models and Migrations
+**Story Points:** 5 | **Est. Solo:** 6h | **Est. Assisté:** 1h
 **Dependencies:** None
 
 - [ ] 1.0 Complete database layer
@@ -83,6 +125,7 @@ Total Tasks: [count]
 ### API Layer
 
 #### Task Group 2: API Endpoints
+**Story Points:** 8 | **Est. Solo:** 10h | **Est. Assisté:** 1.7h
 **Dependencies:** Task Group 1
 
 - [ ] 2.0 Complete API layer
@@ -116,6 +159,7 @@ Total Tasks: [count]
 ### Frontend Components
 
 #### Task Group 3: UI Design
+**Story Points:** 8 | **Est. Solo:** 10h | **Est. Assisté:** 1.7h
 **Dependencies:** Task Group 2
 
 - [ ] 3.0 Complete UI components
@@ -162,6 +206,7 @@ Total Tasks: [count]
 ### Testing
 
 #### Task Group 4: Final Test Validation
+**Story Points:** 3 | **Est. Solo:** 4h | **Est. Assisté:** 0.7h
 **Dependencies:** Task Groups 1-3
 
 - [ ] 4.0 Validate all tests from test-plan.md
@@ -191,10 +236,20 @@ Total Tasks: [count]
 ## Execution Order
 
 Recommended implementation sequence:
-1. Database Layer (Task Group 1)
-2. API Layer (Task Group 2)
-3. Frontend Design (Task Group 3)
-4. Test Review & Gap Analysis (Task Group 4)
+1. Database Layer (Task Group 1) - 6h solo / 1h assisté
+2. API Layer (Task Group 2) - 10h solo / 1.7h assisté
+3. Frontend Design (Task Group 3) - 10h solo / 1.7h assisté
+4. Test Review & Gap Analysis (Task Group 4) - 4h solo / 0.7h assisté
+
+## Summary
+
+| Task Group | SP | Solo | Assisté |
+|------------|:--:|:----:|:-------:|
+| Database Layer | 5 | 6h | 1h |
+| API Layer | 8 | 10h | 1.7h |
+| Frontend Components | 8 | 10h | 1.7h |
+| Testing | 3 | 4h | 0.7h |
+| **Total** | **24** | **30h** | **5.1h** |
 ```
 
 **Note**: Adapt this structure based on the actual feature requirements. Some features may need:
@@ -229,6 +284,8 @@ Use `mcp__plugin_Notion_notion__notion-create-pages` to create all tasks in the 
 | Layer type | `Tags` | "Backend", "Frontend", "Database", "Testing" |
 | Priority | `Priority Level` | "Haute" (parent tasks), "Moyenne" (sub-tasks) |
 | Parent project | `🎯 Projects` | Relation to project page URL |
+| Story Points | `Story Points` | Number (from task group header) |
+| Estimated Hours | `Estimated Hours` | Number (calculated: SP × 1.2) |
 
 **Status Mapping (French):**
 - `[ ]` unchecked → "A Faire"
@@ -260,6 +317,8 @@ Use `mcp__plugin_Notion_notion__notion-update-page` to update the parent project
       "Status": "A Faire",
       "Tags": "Database",
       "Priority Level": "Moyenne",
+      "Story Points": 5,
+      "Estimated Hours": 6,
       "🎯 Projects": "[{\"id\": \"project-page-id\"}]"
     }
   }]
@@ -272,6 +331,7 @@ Use `mcp__plugin_Notion_notion__notion-update-page` to update the parent project
 
 - **Create tasks that are specific and verifiable**
 - **Group related tasks:** For example, group back-end engineering tasks together and front-end UI tasks together.
+- **Include effort estimations:** Every task group MUST include Story Points and time estimates (Solo + Assisté)
 - **Reference test-plan.md for test requirements**:
   - **If test-plan.md exists**: Each task group references specific tests from test-plan.md (e.g., "tests 1-8", "tests 9-18")
   - **If test-plan.md does NOT exist**: Fall back to general guidance (write 2-8 focused tests per task group)
