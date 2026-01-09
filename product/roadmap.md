@@ -2,35 +2,35 @@
 
 ## Phase 1: Core Foundation (MVP)
 
-1. [ ] **Database Schema** - Create Supabase tables for projects, specs, tasks, tests with proper relationships and RLS policies `S`
+1. [x] **Database Schema** - Create Supabase tables for projects, features, tasks, tests with proper relationships and RLS policies `S` ✅
 
-2. [ ] **Authentication** - Implement user authentication with Supabase Auth including login, signup, and session management `S`
+2. [x] **Authentication** - Implement user authentication with Supabase Auth including login, signup, and session management `S` ✅
 
-3. [ ] **Project Management** - CRUD operations for projects with list view, create modal, edit, and delete functionality `M`
+3. [x] **Project Management** - CRUD operations for projects with list view, create modal, edit, and delete functionality `M` ✅
 
-4. [ ] **Spec Management** - CRUD operations for specs within projects, including lifecycle phase tracking (raw-idea, shape, write, tasks, implement, verify) `M`
+4. [x] **Feature Management** - CRUD operations for features within projects, including lifecycle phase tracking (raw-idea, shape, write, tasks, implement, verify) `M` ✅
 
-5. [ ] **Task Kanban Board** - Drag-and-drop Kanban board with 5 columns (A Faire, En cours, En attente, En cours de validation, Termine) for managing tasks within specs `M`
+5. [ ] **Task Kanban Board** - Drag-and-drop Kanban board with 5 columns (Backlog, To Do, In Progress, In Review, Done) for managing tasks within sprints `M`
 
 6. [ ] **Task Details** - Full task editing with title, description, priority, tags, due date, and time estimates `S`
 
-7. [ ] **Test Tracking** - CRUD operations for tests within specs, with status tracking (pending, passed, failed) `S`
+7. [ ] **Test Tracking** - CRUD operations for tests within features, with status tracking (pending, passed, failed) `S`
 
-8. [ ] **Bug Tracking** - CRUD operations for bugs with severity, priority, status, and linking to specs/tasks `M`
+8. [ ] **Bug Tracking** - CRUD operations for bugs with severity, priority, status, and linking to features/tasks `M`
 
-9. [ ] **Dashboard Metrics** - Main dashboard showing project counts, task distribution by status, bug counts, and completion rates `M`
+9. [x] **Dashboard Metrics** - Main dashboard showing project counts, task distribution by status, bug counts, and completion rates `M` ✅
 
 ## Phase 2: Enhanced Tracking
 
-10. [ ] **Spec Progress Metrics** - Progress indicators per spec showing task completion percentage and test pass rate `S`
+10. [ ] **Feature Progress Metrics** - Progress indicators per feature showing task completion percentage and test pass rate `S`
 
-11. [ ] **Project Progress Rollup** - Aggregate metrics from specs to project level with visual progress bars `S`
+11. [ ] **Project Progress Rollup** - Aggregate metrics from features to project level with visual progress bars `S`
 
 12. [ ] **Velocity Charts** - Charts showing tasks completed over time per project and overall `M`
 
-13. [ ] **Timeline View** - Calendar/Gantt view for visualizing tasks and specs with due dates `L`
+13. [ ] **Timeline View** - Calendar/Gantt view for visualizing tasks and features with due dates `L`
 
-14. [ ] **Search and Filter** - Global search across projects, specs, tasks with filters by status, priority, tags `M`
+14. [ ] **Search and Filter** - Global search across projects, features, tasks with filters by status, priority, tags `M`
 
 15. [ ] **Notifications** - In-app notifications for due dates, status changes, and blocked tasks `M`
 
@@ -48,7 +48,7 @@
 
 ## Phase 4: Public Release
 
-21. [ ] **Export Functionality** - Export projects/specs/tasks to CSV and PDF reports `M`
+21. [ ] **Export Functionality** - Export projects/features/tasks to CSV and PDF reports `M`
 
 22. [ ] **Public Documentation** - User documentation for agent-os community adoption `M`
 
