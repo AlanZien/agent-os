@@ -1,0 +1,70 @@
+task_groups:
+  - name: tests-table-migrations
+    claude_code_subagent: implementer
+    standards:
+      - global/*
+      - integrations/supabase/*
+
+  - name: bugs-table-migrations
+    claude_code_subagent: implementer
+    standards:
+      - global/*
+      - integrations/supabase/*
+
+  - name: test-types-definition
+    claude_code_subagent: implementer
+    standards:
+      - global/global-standards.md
+
+  - name: bug-types-definition
+    claude_code_subagent: implementer
+    standards:
+      - global/global-standards.md
+
+  - name: use-tests-hook
+    claude_code_subagent: implementer
+    standards:
+      - global/*
+      - integrations/supabase/*
+
+  - name: use-bugs-hook
+    claude_code_subagent: implementer
+    standards:
+      - global/*
+      - integrations/supabase/*
+
+  - name: test-management-ui
+    claude_code_subagent: implementer
+    standards:
+      - global/*
+      - frontend/*
+
+  - name: bug-management-ui
+    claude_code_subagent: implementer
+    standards:
+      - global/*
+      - frontend/*
+
+  - name: feature-metrics-components
+    claude_code_subagent: implementer
+    standards:
+      - global/*
+      - frontend/*
+
+  - name: project-dashboard-metrics
+    claude_code_subagent: implementer
+    standards:
+      - global/*
+      - frontend/*
+
+  - name: e2e-tests
+    claude_code_subagent: implementer
+    standards:
+      - testing/*
+      - global/*
+
+  - name: final-validation
+    claude_code_subagent: implementer
+    standards:
+      - testing/*
+      - global/*

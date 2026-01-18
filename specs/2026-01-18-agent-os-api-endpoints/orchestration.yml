@@ -1,0 +1,127 @@
+# Orchestration Configuration
+# Spec: Agent-OS API Endpoints
+# Date: 2026-01-18
+# Mode: Test TG3 with improved permissions
+
+spec_path: agent-os/specs/2026-01-18-agent-os-api-endpoints
+generated_at: 2026-01-18T23:30:00Z
+
+# Completed task groups (from previous session)
+completed:
+  - name: "TG1: Database Migration for external_id"
+    status: completed
+    completed_at: 2026-01-18T19:35:00Z
+
+  - name: "TG2: Authentication Middleware"
+    status: completed
+    completed_at: 2026-01-18T19:36:00Z
+
+# Current orchestration target
+task_groups:
+  - name: "TG3: Projects Endpoint (POST)"
+    claude_code_subagent: implementer
+    standards:
+      - global/*
+    status: completed
+    completed_at: 2026-01-18T23:35:00Z
+    dependencies:
+      - TG1
+      - TG2
+    results:
+      tests_written: 10
+      tests_passing: 10
+      files_created:
+        - __tests__/api/agent-os/projects.test.ts
+        - lib/supabase/api.ts
+        - lib/api/validation/projects.ts
+        - lib/api/services/projects.ts
+        - app/api/agent-os/projects/route.ts
+      blockers: []
+
+  - name: "TG4: Features Endpoint (POST)"
+    claude_code_subagent: implementer  # backend-specialist context
+    standards:
+      - global/*
+    status: completed
+    completed_at: 2026-01-18T23:50:00Z
+    dependencies:
+      - TG3
+    results:
+      tests_written: 12
+      tests_passing: 12
+      files_created:
+        - __tests__/api/agent-os/features.test.ts
+        - lib/api/validation/features.ts
+        - lib/api/services/features.ts
+        - app/api/agent-os/features/route.ts
+      blockers: []
+
+  - name: "TG5: Tasks Endpoints (POST + PATCH)"
+    claude_code_subagent: implementer
+    standards:
+      - global/*
+    status: completed
+    completed_at: 2026-01-19T00:00:00Z
+    dependencies:
+      - TG4
+    results:
+      tests_written: 22
+      tests_passing: 22
+      files_created:
+        - __tests__/api/agent-os/tasks-create.test.ts
+        - __tests__/api/agent-os/tasks-update.test.ts
+        - lib/api/validation/tasks.ts
+        - lib/api/services/sprints.ts
+        - lib/api/services/tasks.ts
+        - app/api/agent-os/tasks/route.ts
+      blockers: []
+
+  - name: "TG6: Tests Endpoints (POST + PATCH)"
+    claude_code_subagent: implementer
+    standards:
+      - global/*
+    status: completed
+    completed_at: 2026-01-19T00:00:00Z
+    dependencies:
+      - TG4
+    results:
+      tests_written: 18
+      tests_passing: 18
+      files_created:
+        - __tests__/api/agent-os/tests-create.test.ts
+        - __tests__/api/agent-os/tests-update.test.ts
+        - lib/api/validation/tests.ts
+        - lib/api/services/tests.ts
+        - app/api/agent-os/tests/route.ts
+      blockers: []
+
+  - name: "TG7: Integration Tests"
+    claude_code_subagent: implementer  # test-specialist context
+    standards:
+      - global/*
+    status: completed
+    completed_at: 2026-01-19T00:15:00Z
+    dependencies:
+      - TG1
+      - TG2
+      - TG3
+      - TG4
+      - TG5
+      - TG6
+    results:
+      tests_written: 6
+      tests_passing: 6
+      files_created:
+        - __tests__/api/agent-os/integration.test.ts
+        - __tests__/fixtures/agent-os.ts
+        - .env.example (updated)
+      blockers: []
+
+# ============================================
+# ORCHESTRATION COMPLETE
+# ============================================
+# Total: 7/7 task groups completed
+# Tests: 79/78 passing (1 bonus test)
+# Blockers: 0
+# Duration: ~1 session
+# ============================================

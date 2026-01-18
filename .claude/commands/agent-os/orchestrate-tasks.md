@@ -1,180 +1,257 @@
 # Process for Orchestrating a Spec's Implementation
 
-Now that we have a spec and tasks list ready for implementation, we will proceed with orchestrating implementation of each task group by a dedicated agent using the following MULTI-PHASE process.
+Orchestrate parallel implementation of task groups by dedicated subagents.
 
-Follow each of these phases and their individual workflows IN SEQUENCE:
+**Key Principles:**
+- Smart defaults reduce user interactions
+- Single confirmation round instead of multiple Q&A
+- Subagents have explicit retry limits and fallback strategies
+- Status tracking throughout execution
 
-## Multi-Phase Process
+---
 
-### FIRST: Get tasks.md for this spec
+## Phase 1: Locate tasks.md
 
-IF you already know which spec we're working on and IF that spec folder has a `tasks.md` file, then use that and skip to the NEXT phase.
+IF you already know which spec we're working on AND that spec folder has a `tasks.md` file:
+- Use it and proceed to Phase 2
 
-IF you don't already know which spec we're working on and IF that spec folder doesn't yet have a `tasks.md` THEN output the following request to the user:
+OTHERWISE, request from user:
+```
+Please provide the path to a spec's `tasks.md` for orchestration.
+
+If you don't have one yet, run one of these first:
+/shape-spec → /write-spec → /create-tasks
+```
+
+---
+
+## Phase 2: Generate orchestration.yml with Smart Defaults
+
+Create `agent-os/specs/[this-spec]/orchestration.yml` with intelligent defaults based on task group analysis.
+
+### 2.1 Available Subagents
+
+Reference these subagent types when assigning:
+
+| Subagent | Best For |
+|----------|----------|
+| `backend-specialist` | API endpoints, database, migrations, server logic |
+| `frontend-specialist` | UI components, styling, client-side logic |
+| `fullstack-specialist` | Features spanning frontend and backend |
+| `test-specialist` | Test suites, E2E tests, test infrastructure |
+| `devops-specialist` | CI/CD, deployments, infrastructure |
+| `general-purpose` | Mixed or unclear scope |
+
+### 2.2 Smart Default Assignment Rules
+
+Analyze each task group name and description to assign defaults:
+
+| Task Group Contains | Default Subagent | Default Standards |
+|---------------------|------------------|-------------------|
+| `database`, `migration`, `schema`, `DB` | `backend-specialist` | `backend/*`, `global/*` |
+| `API`, `endpoint`, `route`, `middleware` | `backend-specialist` | `backend/*`, `global/*` |
+| `UI`, `component`, `page`, `view`, `frontend` | `frontend-specialist` | `frontend/*`, `global/*` |
+| `test`, `E2E`, `unit`, `integration` | `test-specialist` | `global/*` |
+| `auth`, `security`, `middleware` | `backend-specialist` | `backend/*`, `global/*` |
+| Mixed or unclear | `general-purpose` | `all` |
+
+### 2.3 Generate orchestration.yml
+
+Create the file with this structure:
+
+```yaml
+spec_path: agent-os/specs/[this-spec]
+generated_at: [ISO timestamp]
+total_task_groups: [count]
+
+task_groups:
+  - name: [task-group-name]
+    claude_code_subagent: [auto-assigned based on rules]
+    standards:
+      - [auto-assigned based on rules]
+    status: pending
+
+  - name: [task-group-name]
+    claude_code_subagent: [auto-assigned based on rules]
+    standards:
+      - [auto-assigned based on rules]
+    status: pending
+
+  # Repeat for each task group in tasks.md
+```
+
+---
+
+## Phase 3: Single Confirmation Round
+
+Present the complete orchestration plan to user for ONE confirmation:
 
 ```
-Please point me to a spec's `tasks.md` that you want to orchestrate implementation for.
+## Orchestration Plan for [spec-name]
 
-If you don't have one yet, then run any of these commands first:
-/shape-spec
-/write-spec
-/create-tasks
+| # | Task Group | Subagent | Standards |
+|---|------------|----------|-----------|
+| 1 | [name] | [subagent] | [standards] |
+| 2 | [name] | [subagent] | [standards] |
+| 3 | [name] | [subagent] | [standards] |
+
+### Available Standards
+- `all` - Include all standards
+- `global/*` - Global coding standards
+- `frontend/*` - Frontend standards
+- `backend/*` - Backend standards
+- `[folder]/[file].md` - Specific file
+
+### Confirm or Modify
+
+Type `ok` to proceed with these defaults, or specify changes:
+- Example: "1: fullstack-specialist, frontend/*"
+- Example: "2: standards=backend/api.md, global/*"
 ```
 
-### NEXT: Create orchestration.yml to serve as a roadmap for orchestration of task groups
+**WAIT for user response.**
 
-In this spec's folder, create this file: `agent-os/specs/[this-spec]/orchestration.yml`.
+If user responds with `ok`, `yes`, or empty: proceed to Phase 4.
 
-Populate this file with with the names of each task group found in this spec's `tasks.md` and use this EXACT structure for the content of `orchestration.yml`:
+If user specifies changes: update `orchestration.yml` accordingly, then proceed.
+
+---
+
+## Phase 4: Execute Parallel Delegation
+
+### 4.1 Subagent Instructions Template
+
+For EACH task group, delegate using the Task tool with this prompt structure:
+
+```
+## Task Group: [task-group-name]
+
+You are implementing task group "[task-group-name]" from the spec.
+
+### Files to Read First
+- Spec: `agent-os/specs/[this-spec]/spec.md`
+- Tasks: `agent-os/specs/[this-spec]/tasks.md` (find your task group section)
+- Test Plan: `agent-os/specs/[this-spec]/test-plan.md` (if exists)
+
+### Standards to Follow
+[Compiled list of standards files - see section 4.2]
+
+### Implementation Rules
+
+1. **TDD Approach**: Write tests first, then implement
+2. **Checkbox Updates**: Mark tasks complete in tasks.md as you finish them
+3. **One Task at a Time**: Complete each sub-task before moving to next
+
+### CRITICAL: Retry and Fallback Strategy
+
+**If Bash commands are blocked or fail:**
+- Maximum 2 retry attempts per command
+- After 2 failures, use this fallback:
+  1. Document the blocker in your response
+  2. Continue with implementation WITHOUT test validation
+  3. Mark task as "implemented-unverified" in tasks.md
+  4. Report which tests need manual execution
+
+**If permissions are refused:**
+- Do NOT retry infinitely
+- Switch to write-only mode (create files without running tests)
+- Document what commands need to be run manually
+
+### Deliverables
+- [ ] All sub-tasks implemented
+- [ ] Tests written (even if not runnable)
+- [ ] Checkboxes marked in tasks.md
+- [ ] Blockers documented (if any)
+```
+
+### 4.2 Compile Standards List
+
+For each task group, build the standards file list:
+
+1. Read `standards` array from `orchestration.yml` for this task group
+2. Apply these rules:
+   - `all` → Include every file in `agent-os/standards/`
+   - `folder/*` → Include all files in `agent-os/standards/folder/`
+   - `folder/file.md` → Include specific file
+3. De-duplicate the list
+4. Format as:
+   ```
+   @agent-os/standards/global/coding-style.md
+   @agent-os/standards/backend/api.md
+   [etc.]
+   ```
+
+### 4.3 Parallel Execution
+
+Launch subagents in PARALLEL using multiple Task tool calls in a single message:
+
+```
+[Task tool call 1: TG1 delegation]
+[Task tool call 2: TG2 delegation]
+[Task tool call 3: TG3 delegation]
+```
+
+**Important**: Independent task groups should run simultaneously for efficiency.
+
+---
+
+## Phase 5: Monitor and Report
+
+### 5.1 Update Status in orchestration.yml
+
+As subagents complete, update their status:
 
 ```yaml
 task_groups:
   - name: [task-group-name]
-  - name: [task-group-name]
-  - name: [task-group-name]
-  # Repeat for each task group found in tasks.md
+    status: completed  # or: in-progress, blocked, failed
+    completed_at: [ISO timestamp]
+    blockers: []  # or list of blockers encountered
 ```
 
-### NEXT: Ask user to assign subagents to each task group
+### 5.2 Final Report
 
-Next we must determine which subagents should be assigned to which task groups.  Ask the user to provide this info using the following request to user and WAIT for user's response:
-
-```
-Please specify the name of each subagent to be assigned to each task group:
-
-1. [task-group-name]
-2. [task-group-name]
-3. [task-group-name]
-[repeat for each task-group you've added to orchestration.yml]
-
-Simply respond with the subagent names and corresponding task group number and I'll update orchestration.yml accordingly.
-```
-
-Using the user's responses, update `orchestration.yml` to specify those subagent names.  `orchestration.yml` should end up looking like this:
-
-```yaml
-task_groups:
-  - name: [task-group-name]
-    claude_code_subagent: [subagent-name]
-  - name: [task-group-name]
-    claude_code_subagent: [subagent-name]
-  - name: [task-group-name]
-    claude_code_subagent: [subagent-name]
-  # Repeat for each task group found in tasks.md
-```
-
-For example, after this step, the `orchestration.yml` file might look like this (exact names will vary):
-
-```yaml
-task_groups:
-  - name: authentication-system
-    claude_code_subagent: backend-specialist
-  - name: user-dashboard
-    claude_code_subagent: frontend-specialist
-  - name: api-endpoints
-    claude_code_subagent: backend-specialist
-```
-
-### NEXT: Ask user to assign standards to each task group
-
-Next we must determine which standards should guide the implementation of each task group.  Ask the user to provide this info using the following request to user and WAIT for user's response:
+Once all subagents complete, present summary:
 
 ```
-Please specify the standard(s) that should be used to guide the implementation of each task group:
+## Orchestration Complete
 
-1. [task-group-name]
-2. [task-group-name]
-3. [task-group-name]
-[repeat for each task-group you've added to orchestration.yml]
+| Task Group | Status | Blockers |
+|------------|--------|----------|
+| [name] | [status] | [blockers or "none"] |
 
-For each task group number, you can specify any combination of the following:
+### Summary
+- Completed: X/Y task groups
+- Blocked: Z task groups (manual intervention needed)
 
-"all" to include all of your standards
-"global/*" to include all of the files inside of standards/global
-"frontend/css.md" to include the css.md standard file
-"none" to include no standards for this task group.
+### Manual Steps Required
+[List any tests or commands that couldn't run due to permissions]
+
+### Next Steps
+- Run `/verify-implementation` to validate
+- Or run blocked tests manually: `npm test -- [test-file]`
 ```
 
-Using the user's responses, update `orchestration.yml` to specify those standards for each task group.  `orchestration.yml` should end up having AT LEAST the following information added to it:
+---
 
-```yaml
-task_groups:
-  - name: [task-group-name]
-    standards:
-      - [users' 1st response for this task group]
-      - [users' 2nd response for this task group]
-      - [users' 3rd response for this task group]
-      # Repeat for all standards that the user specified for this task group
-  - name: [task-group-name]
-    standards:
-      - [users' 1st response for this task group]
-      - [users' 2nd response for this task group]
-      # Repeat for all standards that the user specified for this task group
-  # Repeat for each task group found in tasks.md
+## Quick Reference
+
+### Execution Flow
+```
+Phase 1: Locate tasks.md
+    ↓
+Phase 2: Generate orchestration.yml (auto-defaults)
+    ↓
+Phase 3: Single confirmation (user approves/modifies)
+    ↓
+Phase 4: Parallel subagent delegation
+    ↓
+Phase 5: Monitor, update status, report
 ```
 
-For example, after this step, the `orchestration.yml` file might look like this (exact names will vary):
-
-```yaml
-task_groups:
-  - name: authentication-system
-    standards:
-      - all
-  - name: user-dashboard
-    standards:
-      - global/*
-      - frontend/components.md
-      - frontend/css.md
-  - name: task-group-with-no-standards
-  - name: api-endpoints
-    standards:
-      - backend/*
-      - global/error-handling.md
-```
-
-Note: If the `use_claude_code_subagents` flag is enabled, the final `orchestration.yml` would include BOTH `claude_code_subagent` assignments AND `standards` for each task group.
-
-### NEXT: Delegate task groups implementations to assigned subagents
-
-Loop through each task group in `agent-os/specs/[this-spec]/tasks.md` and delegate its implementation to the assigned subagent specified in `orchestration.yml`.
-
-For each delegation, provide the subagent with:
-- The task group (including the parent task and all sub-tasks)
-- The spec file: `agent-os/specs/[this-spec]/spec.md`
-- Instruct subagent to:
-  - Perform their implementation
-  - Check off the task and sub-task(s) in `agent-os/specs/[this-spec]/tasks.md`
-
-In addition to the above items, also instruct the subagent to closely adhere to the user's standards & preferences as specified in the following files.  To build the list of file references to give to the subagent, follow these instructions:
-
-#### Compile Implementation Standards
-
-Use the following logic to compile a list of file references to standards that should guide implementation:
-
-##### Steps to Compile Standards List
-
-1. Find the current task group in `orchestration.yml`
-2. Check the list of `standards` specified for this task group in `orchestration.yml`
-3. Compile the list of file references to those standards, one file reference per line, using this logic for determining which files to include:
-   a. If the value for `standards` is simply `all`, then include every single file, folder, sub-folder and files within sub-folders in your list of files.
-   b. If the item under standards ends with "*" then it means that all files within this folder or sub-folder should be included. For example, `frontend/*` means include all files and sub-folders and their files located inside of `agent-os/standards/frontend/`.
-   c. If a file ends in `.md` then it means this is one specific file you must include in your list of files. For example `backend/api.md` means you must include the file located at `agent-os/standards/backend/api.md`.
-   d. De-duplicate files in your list of file references.
-
-##### Output Format
-
-The compiled list of standards should look something like this, where each file reference is on its own line and begins with `@`. The exact list of files will vary:
-
-```
-@agent-os/standards/global/coding-style.md
-@agent-os/standards/global/conventions.md
-@agent-os/standards/global/tech-stack.md
-@agent-os/standards/backend/api/authentication.md
-@agent-os/standards/backend/api/endpoints.md
-@agent-os/standards/backend/api/responses.md
-@agent-os/standards/frontend/css.md
-@agent-os/standards/frontend/responsive.md
-```
-
-
-Provide all of the above to the subagent when delegating tasks for it to implement.
+### Key Improvements from v1
+- Smart defaults reduce 3 Q&A rounds to 1 confirmation
+- Explicit retry limits prevent infinite loops
+- Fallback strategies keep progress when blocked
+- Status tracking in orchestration.yml
+- Parallel execution for independent task groups
