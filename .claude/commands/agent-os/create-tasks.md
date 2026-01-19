@@ -5,6 +5,7 @@ You are creating a tasks breakdown from a given spec and requirements for a new 
 ## PHASE 1: Get and read the spec.md and/or requirements document(s)
 
 You will need ONE OR BOTH of these files to inform your tasks breakdown:
+
 - `agent-os/specs/[this-spec]/spec.md`
 - `agent-os/specs/[this-spec]/planning/requirements.md`
 
@@ -21,20 +22,30 @@ Please direct me to where I can find those.  If you haven't created them yet, yo
 Once you have `spec.md` AND/OR `requirements.md`, use the **tasks-list-creator** subagent to break down the spec and requirements into an actionable tasks list with strategic grouping and ordering.
 
 Provide the tasks-list-creator:
+
 - `agent-os/specs/[this-spec]/spec.md` (if present)
 - `agent-os/specs/[this-spec]/planning/requirements.md` (if present)
 - `agent-os/specs/[this-spec]/planning/visuals/` and its' contents (if present)
 
 The tasks-list-creator will create `tasks.md` inside the spec folder.
 
-## PHASE 3: Inform user
+## PHASE 3: Sync to Tracker
 
-Once the tasks-list-creator has created `tasks.md` output the following to inform the user:
+Once the tasks-list-creator has created `tasks.md`, run the following command to sync tasks to the AgentOS-Tracker:
+
+```bash
+node agent-os/scripts/sync-to-tracker.js agent-os/specs/[this-spec] --type=tasks
+```
+
+## PHASE 4: Inform user
+
+Output the following to inform the user:
 
 ```
 Your tasks list ready!
 
 ✅ Tasks list created: `agent-os/specs/[this-spec]/tasks.md`
+✅ Synced to AgentOS-Tracker
 
 NEXT STEP 👉 Run `/implement-tasks` (simple, effective) or `/orchestrate-tasks` (advanced, powerful) to start building!
 ```

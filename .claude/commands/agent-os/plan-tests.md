@@ -5,6 +5,7 @@ You are creating a comprehensive test plan from a given spec and requirements fo
 ## PHASE 1: Get and read the spec.md and/or requirements document(s)
 
 You will need ONE OR BOTH of these files to inform your test plan:
+
 - `agent-os/specs/[this-spec]/spec.md`
 - `agent-os/specs/[this-spec]/planning/requirements.md`
 
@@ -21,25 +22,36 @@ Please direct me to where I can find those. If you haven't created them yet, you
 Once you have `spec.md` AND/OR `requirements.md`, use the **test-planner** subagent to create a comprehensive test plan with detailed test specifications.
 
 Provide the test-planner:
+
 - `agent-os/specs/[this-spec]/spec.md` (if present)
 - `agent-os/specs/[this-spec]/planning/requirements.md` (if present)
 - `agent-os/specs/[this-spec]/planning/visuals/` and its contents (if present)
 
 The test-planner will create `test-plan.md` inside the spec folder with:
+
 - Test summary table (count by layer and priority)
 - Detailed test specifications in Given-When-Then format
 - Priority levels (Critical/High/Medium/Low)
 - Test dependencies and execution order
 - References to spec.md requirements
 
-## PHASE 3: Inform user
+## PHASE 3: Sync to Tracker
 
-Once the test-planner has created `test-plan.md` output the following to inform the user:
+Once the test-planner has created `test-plan.md`, run the following command to sync tests to the AgentOS-Tracker:
+
+```bash
+node agent-os/scripts/sync-to-tracker.js agent-os/specs/[this-spec] --type=tests
+```
+
+## PHASE 4: Inform user
+
+Output the following to inform the user:
 
 ```
 Your test plan is ready!
 
 ✅ Test plan created: `agent-os/specs/[this-spec]/test-plan.md`
+✅ Synced to AgentOS-Tracker
    - Total tests: [X] ([Critical: X, High: X, Medium: X, Low: X])
    - Database layer: [X] tests
    - API layer: [X] tests
