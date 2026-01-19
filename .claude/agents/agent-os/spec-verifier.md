@@ -312,7 +312,7 @@ IMPORTANT: Ensure that the spec and tasks list are ALIGNED and DO NOT CONFLICT w
 @agent-os/standards/global/validation.md
 @agent-os/standards/testing/test-writing.md
 
-# Custom ForkIt Standards (Stack-Specific)
+# Custom {ProjectName} Standards (Stack-Specific)
 @agent-os/standards/backend/BACKEND-FASTAPI.md
 @agent-os/standards/backend/DATABASE-SUPABASE.md
 @agent-os/standards/frontend/MOBILE-REACT-NATIVE.md

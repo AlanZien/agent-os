@@ -1,4 +1,4 @@
-# Security Standards - ForkIt
+# Security Standards - {ProjectName}
 
 **Version**: 1.0 | **Scope**: Backend + Frontend + Mobile | **Token-Optimized**
 
@@ -104,8 +104,8 @@ app.add_middleware(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "https://forkit.app",
-        "https://mobile.forkit.app"
+        "https://{project-domain}",
+        "https://mobile.{project-domain}"
     ],
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE"],
@@ -295,7 +295,7 @@ import { Platform } from 'react-native';
 const api = axios.create({
   baseURL: __DEV__
     ? 'http://localhost:8000'
-    : 'https://api.forkit.app',
+    : 'https://api.{project-domain}',
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
@@ -344,7 +344,7 @@ if not settings.debug:
     # Prevent host header injection
     app.add_middleware(
         TrustedHostMiddleware,
-        allowed_hosts=["forkit.app", "*.forkit.app"]
+        allowed_hosts=["{project-domain}", "*.{project-domain}"]
     )
 
 # Custom security headers

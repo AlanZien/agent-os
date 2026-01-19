@@ -1,5 +1,5 @@
 #!/bin/sh
-# Setup git hooks for ForkIt
+# Setup git hooks for {ProjectName}
 # Run this script after cloning the repository
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"

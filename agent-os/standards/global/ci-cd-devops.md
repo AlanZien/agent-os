@@ -1,4 +1,4 @@
-# CI/CD & DevOps Standards - ForkIt
+# CI/CD & DevOps Standards - {ProjectName}
 
 **Version**: 1.0 | **Stack**: GitHub Actions + Docker + Railway/Fly.io | **Token-Optimized**
 
@@ -444,7 +444,7 @@ Used across all environments:
 ### Alternative: Fly.io
 ```toml
 # fly.toml
-app = "forkit-api"
+app = "{project-slug}-api"
 primary_region = "cdg"
 
 [build]
@@ -504,7 +504,7 @@ primary_region = "cdg"
     "production": {
       "autoIncrement": true,
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://api.forkit.app"
+        "EXPO_PUBLIC_API_URL": "https://api.{project-domain}"
       }
     }
   },
@@ -619,7 +619,7 @@ jobs:
       - uses: treosh/lighthouse-ci-action@v10
         with:
           urls: |
-            https://staging.forkit.app
+            https://staging.{project-domain}
           uploadArtifacts: true
 ```
 

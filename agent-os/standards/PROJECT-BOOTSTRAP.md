@@ -1,4 +1,4 @@
-# Project Bootstrap - ForkIt
+# Project Bootstrap - {ProjectName}
 
 **Version**: 1.0 | **Use for**: Initial project setup from scratch | **Token-Optimized**
 
@@ -67,7 +67,7 @@ from pydantic_settings import BaseSettings
 from pydantic import field_validator
 
 class Settings(BaseSettings):
-    app_name: str = "ForkIt API"
+    app_name: str = "{ProjectName} API"
     debug: bool = False
 
     # Supabase
@@ -138,7 +138,7 @@ logger = logging.getLogger(__name__)
 limiter = Limiter(key_func=get_remote_address)
 
 app = FastAPI(
-    title="ForkIt API",
+    title="{ProjectName} API",
     version="1.0.0",
     docs_url="/docs" if settings.debug else None,  # Disable docs in prod
     redoc_url="/redoc" if settings.debug else None,
@@ -162,7 +162,7 @@ app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
 
 @app.get("/")
 async def root():
-    return {"message": "ForkIt API is running"}
+    return {"message": "{ProjectName} API is running"}
 
 @app.get("/health")
 async def health():
@@ -281,13 +281,13 @@ mobile/
 ```json
 {
   "expo": {
-    "name": "ForkIt",
-    "slug": "forkit",
+    "name": "{ProjectName}",
+    "slug": "{project-slug}",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "scheme": "forkit",
+    "scheme": "{project-slug}",
     "plugins": [
       "expo-router",
       "expo-secure-store"
@@ -295,14 +295,14 @@ mobile/
     "platforms": ["ios", "android"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.yourcompany.forkit"
+      "bundleIdentifier": "com.yourcompany.{project-slug}"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.yourcompany.forkit"
+      "package": "com.yourcompany.{project-slug}"
     }
   }
 }

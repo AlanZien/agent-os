@@ -1,4 +1,4 @@
-# Supabase Database Standards - ForkIt
+# Supabase Database Standards - {ProjectName}
 
 **Version**: 1.0 | **Stack**: Supabase (PostgreSQL) + Row Level Security | **Token-Optimized**
 
@@ -6,7 +6,7 @@
 
 ### Database Structure
 ```
-ForkIt Database
+{ProjectName} Database
 ├── auth.users (managed by Supabase Auth)
 ├── public.profiles
 ├── public.recipes

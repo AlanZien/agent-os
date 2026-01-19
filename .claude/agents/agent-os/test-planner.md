@@ -266,7 +266,7 @@ Create `agent-os/specs/[current-spec]/user-tests.md` with manual test scenarios 
 ## Prérequis
 - [List prerequisites for testing]
 - Utilisateur connecté avec un compte valide
-- Application mobile ForkIt installée
+- Application mobile {ProjectName} installée
 - Connexion internet active
 
 ---

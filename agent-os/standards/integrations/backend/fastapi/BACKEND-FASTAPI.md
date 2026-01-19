@@ -1,4 +1,4 @@
-# FastAPI Backend Standards - ForkIt
+# FastAPI Backend Standards - {ProjectName}
 
 **Version**: 1.0 | **Stack**: FastAPI + Python 3.11+ | **Token-Optimized**
 
@@ -162,7 +162,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.routes import auth, recipes
 
-app = FastAPI(title="ForkIt API", version="1.0.0")
+app = FastAPI(title="{ProjectName} API", version="1.0.0")
 
 app.add_middleware(
     CORSMiddleware,

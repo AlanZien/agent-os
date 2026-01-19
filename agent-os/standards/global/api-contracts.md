@@ -153,7 +153,7 @@ export interface ItemResponse {
 
 ## Automated Type Generation
 
-ForkIt uses automatic type generation from backend Pydantic models to TypeScript.
+{ProjectName} uses automatic type generation from backend Pydantic models to TypeScript.
 
 ### Generate Types
 

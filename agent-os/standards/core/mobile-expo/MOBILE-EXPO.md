@@ -1,4 +1,4 @@
-# React Native Mobile Standards - ForkIt
+# React Native Mobile Standards - {ProjectName}
 
 **Version**: 1.0 | **Stack**: React Native + Expo + TypeScript | **Token-Optimized**
 

@@ -66,7 +66,7 @@ Services qui peuvent évoluer sans impacter le core :
 
 ## 🔄 Évolution d'une Stack
 
-### Exemple: Projet ForkIt
+### Exemple: Projet {ProjectName}
 
 **Phase 1: MVP (Mois 0-6)**
 ```yaml

@@ -140,7 +140,7 @@ python-dotenv==1.0.0
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-app = FastAPI(title="ForkIt API")
+app = FastAPI(title="{ProjectName} API")
 
 app.add_middleware(
     CORSMiddleware,

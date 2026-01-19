@@ -1,6 +1,6 @@
-# ForkIt Development Standards
+# {ProjectName} Development Standards
 
-**Version**: 1.0 | **Project**: ForkIt (Recipe App) | **Reusable for**: Maison Epigenetic
+**Version**: 1.0 | **Project**: {ProjectName} | **Reusable for**: {AnotherProject}
 
 ## Overview
 
@@ -81,7 +81,7 @@ Standards condensés et optimisés pour tokens, réutilisables pour tous les pro
 
 ## Quick Start
 
-### Pour ForkIt
+### Pour votre projet
 
 1. **Backend Setup**
    ```bash
@@ -110,7 +110,7 @@ Standards condensés et optimisés pour tokens, réutilisables pour tous les pro
    # Appliquer migrations depuis docs/standards/DATABASE-SUPABASE.md
    ```
 
-### Pour Maison Epigenetic
+### Pour {AnotherProject}
 
 **Réutilisation**: Copier les 3 standards et adapter :
 - Remplacer "Recipe" par votre domaine métier
@@ -205,9 +205,9 @@ Standards condensés et optimisés pour tokens, réutilisables pour tous les pro
 ## Updates
 
 **Version 1.0** (2024-12-27):
-- Initial standards pour ForkIt
+- Initial standards pour {ProjectName}
 - FastAPI, React Native, Supabase
-- Prêt pour Maison Epigenetic
+- Prêt pour {AnotherProject}
 
 **Prochaines versions**:
 - Patterns avancés (caching, real-time)

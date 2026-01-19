@@ -1,4 +1,4 @@
-# Global Standards - ForkIt
+# Global Standards - {ProjectName}
 
 **Version**: 1.0 | **Applies to**: All code (Backend + Mobile) | **Token-Optimized**
 

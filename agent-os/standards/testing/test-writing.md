@@ -1,4 +1,4 @@
-# Testing Standards - ForkIt
+# Testing Standards - {ProjectName}
 
 **Version**: 2.0 | **Stack**: Pytest + Jest + React Native Testing Library | **Token-Optimized**
 

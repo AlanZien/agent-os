@@ -1,4 +1,4 @@
-# Backend Patterns - ForkIt
+# Backend Patterns - {ProjectName}
 
 **Version**: 1.0 | **Complement to**: BACKEND-FASTAPI.md | **Token-Optimized**
 

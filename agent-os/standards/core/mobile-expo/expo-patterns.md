@@ -1,4 +1,4 @@
-# Frontend Patterns - ForkIt
+# Frontend Patterns - {ProjectName}
 
 **Version**: 1.0 | **Complement to**: MOBILE-REACT-NATIVE.md | **Token-Optimized**
 

@@ -133,7 +133,7 @@ database: supabase → database: aws-rds
 ### 🔜 À Créer (Quand Besoin)
 
 Actuellement, le dossier est vide. Les migrations seront ajoutées **au besoin** quand:
-1. Un projet ForkIt démontre un besoin de migration
+1. Un votre projet démontre un besoin de migration
 2. Une stack devient obsolète
 3. Une amélioration est identifiée
 

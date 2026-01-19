@@ -1,4 +1,4 @@
-# ForkIt Standards - Quick Reference
+# {ProjectName} Standards - Quick Reference
 
 **Version**: 1.0 | **Use this first** - Load full standards only when needed
 
